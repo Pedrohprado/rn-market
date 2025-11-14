@@ -5,6 +5,7 @@ import {
   Text,
   FlatList,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { styles } from './style';
 import Button from '@/components/Button';
@@ -12,84 +13,104 @@ import Input from '@/components/Input';
 import Filter from '@/components/Filter';
 import { Status } from '@/types/status';
 import Item from '@/components/Item';
+import { useState } from 'react';
+interface itemsProps {
+  id: string;
+  status: Status;
+  description: string;
+}
 
 const FILTER_STATUS: Status[] = [Status.DONE, Status.PEDING];
-const ITEMS = [
-  {
-    id: '1',
-    status: Status.DONE,
-    description: 'teste',
-  },
-  {
-    id: '2',
-    status: Status.PEDING,
-    description: 'teste teste',
-  },
-  {
-    id: '3',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '4',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '5',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '6',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '7',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '8',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '9',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '10',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '11',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-  {
-    id: '12',
-    status: Status.DONE,
-    description: 'teste teste teste',
-  },
-];
+// const ITEMS = [
+//   {
+//     id: '1',
+//     status: Status.DONE,
+//     description: 'teste',
+//   },
+//   {
+//     id: '2',
+//     status: Status.PEDING,
+//     description: 'teste teste',
+//   },
+//   {
+//     id: '3',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '4',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '5',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '6',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '7',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '8',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '9',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '10',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '11',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+//   {
+//     id: '12',
+//     status: Status.DONE,
+//     description: 'teste teste teste',
+//   },
+// ];
 export function Home() {
+  const [filter, setFilter] = useState<Status>(Status.PEDING);
+  const [description, setDescription] = useState<string>('');
+  const [items, setItems] = useState<itemsProps[]>([]);
+
+  function handleAdd() {
+    if (!description.trim()) {
+      Alert.alert('Descrição', 'Informe a descrição!');
+    }
+  }
   return (
     <View style={styles.container}>
       <Image source={require('@/assets/logo.png')} style={styles.logo} />
 
       <View style={styles.form}>
-        <Input placeholder='what?' />
-        <Button title='lançar' />
+        <Input placeholder='what?' onChangeText={setDescription} />
+        <Button title='lançar' onPress={handleAdd} />
       </View>
 
       <View style={styles.content}>
         <View style={styles.header}>
           {FILTER_STATUS.map((status, index) => (
-            <Filter key={index} status={status} isActive />
+            <Filter
+              key={index}
+              status={status}
+              isActive={status === filter}
+              onPress={() => setFilter(status)}
+            />
           ))}
 
           <TouchableOpacity style={styles.clearButton}>
@@ -97,7 +118,7 @@ export function Home() {
           </TouchableOpacity>
         </View>
         <FlatList
-          data={ITEMS} //array dos items que precisam ser renderizados
+          data={items} //array dos items que precisam ser renderizados
           keyExtractor={(item) => item.id} //de onde vem as keys para identificação unica
           renderItem={(
             { item } //componente que vai renderizar os items e o valor das props
