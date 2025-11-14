@@ -1,6 +1,6 @@
+import { styles } from './style';
 import { Status } from '@/types/status';
 import { TouchableOpacity, Text, TouchableOpacityProps } from 'react-native';
-import { styles } from './style';
 
 interface FilterProps extends TouchableOpacityProps {
   status: Status;
@@ -16,6 +16,7 @@ export default function Filter({ status, isActive, ...rest }: FilterProps) {
           opacity: isActive ? 1 : 0.5,
         },
       ]}
+      activeOpacity={0.8}
       {...rest}
     >
       <Text style={styles.title}>
