@@ -13,12 +13,13 @@ import Input from '@/components/Input';
 import Filter from '@/components/Filter';
 import { Status } from '@/types/status';
 import Item from '@/components/Item';
-import { useState } from 'react';
-interface itemsProps {
-  id: string;
-  status: Status;
-  description: string;
-}
+import { useEffect, useState } from 'react';
+import {
+  add,
+  get,
+  getByStatus,
+  ItemStorage,
+} from '../../../storage/itemsStorage';
 
 const FILTER_STATUS: Status[] = [Status.DONE, Status.PEDING];
 // const ITEMS = [
@@ -86,19 +87,48 @@ const FILTER_STATUS: Status[] = [Status.DONE, Status.PEDING];
 export function Home() {
   const [filter, setFilter] = useState<Status>(Status.PEDING);
   const [description, setDescription] = useState<string>('');
-  const [items, setItems] = useState<itemsProps[]>([]);
+  const [items, setItems] = useState<ItemStorage[]>([]);
 
-  function handleAdd() {
+  async function handleFilterItems(status: Status) {
+    const items = await getByStatus(status);
+    setItems(items);
+    setFilter(status);
+  }
+
+  async function handleAdd() {
     if (!description.trim()) {
       Alert.alert('Descrição', 'Informe a descrição!');
+      return;
     }
+
+    const newItem = {
+      id: Math.random().toString(36).substring(2),
+      description,
+      status: Status.PEDING,
+    };
+
+    await add(newItem);
+    get().then((items) => {
+      console.log(items);
+      setItems(items);
+    });
+    setDescription('');
   }
+
+  useEffect(() => {
+    get().then((response) => setItems(response));
+  }, []);
+
   return (
     <View style={styles.container}>
       <Image source={require('@/assets/logo.png')} style={styles.logo} />
 
       <View style={styles.form}>
-        <Input placeholder='what?' onChangeText={setDescription} />
+        <Input
+          placeholder='what?'
+          value={description}
+          onChangeText={setDescription}
+        />
         <Button title='lançar' onPress={handleAdd} />
       </View>
 
@@ -109,7 +139,7 @@ export function Home() {
               key={index}
               status={status}
               isActive={status === filter}
-              onPress={() => setFilter(status)}
+              onPress={() => handleFilterItems(status)}
             />
           ))}
 
