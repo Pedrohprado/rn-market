@@ -19,71 +19,11 @@ import {
   get,
   getByStatus,
   ItemStorage,
+  remove,
 } from '../../../storage/itemsStorage';
 
 const FILTER_STATUS: Status[] = [Status.DONE, Status.PEDING];
-// const ITEMS = [
-//   {
-//     id: '1',
-//     status: Status.DONE,
-//     description: 'teste',
-//   },
-//   {
-//     id: '2',
-//     status: Status.PEDING,
-//     description: 'teste teste',
-//   },
-//   {
-//     id: '3',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '4',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '5',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '6',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '7',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '8',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '9',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '10',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '11',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-//   {
-//     id: '12',
-//     status: Status.DONE,
-//     description: 'teste teste teste',
-//   },
-// ];
+
 export function Home() {
   const [filter, setFilter] = useState<Status>(Status.PEDING);
   const [description, setDescription] = useState<string>('');
@@ -95,6 +35,23 @@ export function Home() {
     setFilter(status);
   }
 
+  async function itemsByStatus() {
+    try {
+      const response = await getByStatus(filter);
+      setItems(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleRemoveItem(idItem: string) {
+    try {
+      await remove(idItem);
+      await itemsByStatus();
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async function handleAdd() {
     if (!description.trim()) {
       Alert.alert('Descrição', 'Informe a descrição!');
@@ -158,7 +115,9 @@ export function Home() {
                 status: item.status,
                 description: item.description,
               }}
-              onRemove={() => console.log('remover')}
+              onRemove={() => {
+                handleRemoveItem(item.id);
+              }}
               onStatus={() => console.log('status')}
             />
           )}
