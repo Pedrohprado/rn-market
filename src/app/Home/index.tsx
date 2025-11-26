@@ -16,6 +16,7 @@ import Item from '@/components/Item';
 import { useEffect, useState } from 'react';
 import {
   add,
+  clear,
   get,
   getByStatus,
   ItemStorage,
@@ -72,6 +73,28 @@ export function Home() {
     setDescription('');
   }
 
+  function handlerClear() {
+    Alert.alert('remover', 'Deseja remover todos os items da lista?', [
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+      {
+        text: 'Sim',
+        onPress: () => onClear(),
+      },
+    ]);
+  }
+
+  async function onClear() {
+    try {
+      await clear();
+      setItems([]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     get().then((response) => setItems(response));
   }, []);
@@ -100,7 +123,7 @@ export function Home() {
             />
           ))}
 
-          <TouchableOpacity style={styles.clearButton}>
+          <TouchableOpacity style={styles.clearButton} onPress={handlerClear}>
             <Text style={styles.clearText}>Limpar</Text>
           </TouchableOpacity>
         </View>

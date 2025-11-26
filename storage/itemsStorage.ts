@@ -50,7 +50,7 @@ export async function remove(id: string): Promise<void> {
   await save(updatedItems);
 }
 
-async function clear() {
+export async function clear() {
   try {
     await AsyncStorage.removeItem(ITEMS_STORAGE_KEY);
   } catch (error) {
