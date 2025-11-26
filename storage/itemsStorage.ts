@@ -57,3 +57,19 @@ export async function clear() {
     throw new Error('ITEMS_CLEAR: ' + error);
   }
 }
+
+export async function toggleStatus(id: string) {
+  const items = await get();
+
+  const updatedItems = items.map((item) =>
+    item.id === id
+      ? {
+          ...item,
+          status: item.status === Status.PEDING ? Status.DONE : Status.PEDING,
+        }
+      : item
+  );
+
+  await save(updatedItems);
+  return updatedItems;
+}

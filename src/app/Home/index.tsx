@@ -21,6 +21,7 @@ import {
   getByStatus,
   ItemStorage,
   remove,
+  toggleStatus,
 } from '../../../storage/itemsStorage';
 
 const FILTER_STATUS: Status[] = [Status.DONE, Status.PEDING];
@@ -66,10 +67,7 @@ export function Home() {
     };
 
     await add(newItem);
-    get().then((items) => {
-      console.log(items);
-      setItems(items);
-    });
+    await itemsByStatus();
     setDescription('');
   }
 
@@ -93,6 +91,11 @@ export function Home() {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async function onToggleStatus(itemId: string) {
+    await toggleStatus(itemId);
+    await itemsByStatus();
   }
 
   useEffect(() => {
@@ -141,7 +144,7 @@ export function Home() {
               onRemove={() => {
                 handleRemoveItem(item.id);
               }}
-              onStatus={() => console.log('status')}
+              onStatus={() => onToggleStatus(item.id)}
             />
           )}
           ListEmptyComponent={() => (

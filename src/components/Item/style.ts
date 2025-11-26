@@ -4,10 +4,14 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  touch: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 7,
+    flex: 1,
   },
   description: {
-    flex: 1,
     fontSize: 14,
     fontWeight: 600,
   },
