@@ -9,6 +9,14 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  disabled: {
+    backgroundColor: '#2c47b184',
+    height: 48,
+    width: '100%',
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
     color: '#f3f3f3',
     fontSize: 14,

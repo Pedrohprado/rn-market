@@ -112,7 +112,7 @@ export function Home() {
           value={description}
           onChangeText={setDescription}
         />
-        <Button title='lançar' onPress={handleAdd} />
+        <Button title='lançar' onPress={handleAdd} description={description} />
       </View>
 
       <View style={styles.content}>
