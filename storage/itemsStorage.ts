@@ -71,5 +71,4 @@ export async function toggleStatus(id: string) {
   );
 
   await save(updatedItems);
-  return updatedItems;
 }
